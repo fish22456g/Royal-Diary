@@ -2,8 +2,13 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal Diary - 全功能完美版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="RoyalDiary">
+    
+    <title>Royal Diary</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Noto+Serif+TC:wght@600&display=swap');
         
@@ -11,12 +16,12 @@
             --ribbon-pink: #F4C2C2;
             --deep-rose: #D47381;
             --gingham: #ffe4e9;
-            --glass-bg: rgba(255, 252, 249, 0.5);
-            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 252, 249, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.8);
         }
 
         body {
-            margin: 0; padding: 20px 15px;
+            margin: 0; padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom);
             background-color: #fff;
             background-image: linear-gradient(90deg, var(--gingham) 50%, transparent 50%),
                               linear-gradient(var(--gingham) 50%, transparent 50%);
@@ -25,97 +30,119 @@
             display: flex; flex-direction: column; align-items: center;
             height: 100vh; color: #5a4a4a;
             box-sizing: border-box; overflow: hidden;
+            /* 防止手機拉動回彈效果 */
+            overscroll-behavior-y: none;
         }
 
         .main-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             width: 100%; max-width: 480px; height: 100%;
-            padding: 25px; border-radius: 40px;
+            padding: 20px; border-radius: 35px;
             border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px rgba(212, 115, 129, 0.15);
+            box-shadow: 0 15px 35px rgba(212, 115, 129, 0.1);
             box-sizing: border-box; display: flex; flex-direction: column;
         }
 
-        h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--deep-rose); margin: 0; text-align: center; }
-        .quote-box { text-align: center; font-size: 0.85rem; color: #888; font-style: italic; margin-bottom: 12px; min-height: 1.2rem; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--deep-rose); margin: 0; text-align: center; }
+        .quote-box { text-align: center; font-size: 0.8rem; color: #888; font-style: italic; margin-bottom: 10px; min-height: 1.2rem; }
 
         .fixed-top { flex-shrink: 0; }
 
         .status-box {
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 25px; padding: 18px; margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.6); text-align: center;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px; padding: 15px; margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.8); text-align: center;
         }
         
-        .summary-row {
-            display: flex; justify-content: space-around;
-            margin-top: 12px; padding-top: 10px;
-            border-top: 1px dashed rgba(212, 115, 129, 0.2);
-            font-size: 0.85rem;
-        }
-        .summary-item b { display: block; font-size: 1.1rem; color: var(--deep-rose); }
-
-        .progress-bar-bg { width: 100%; height: 14px; background: rgba(255, 255, 255, 0.6); border-radius: 50px; overflow: hidden; margin: 10px 0; }
+        .progress-bar-bg { width: 100%; height: 12px; background: rgba(255, 255, 255, 0.6); border-radius: 50px; overflow: hidden; margin: 8px 0; }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #FFD1DC, var(--deep-rose)); width: 0%; transition: width 1.2s ease; }
 
-        /* 日期選擇器樣式 */
-        .date-container { text-align: center; margin-bottom: 10px; }
-        #mainDate { 
-            border: 1.5px solid var(--ribbon-pink); border-radius: 15px; 
-            padding: 5px 15px; font-family: inherit; color: var(--deep-rose); 
-            font-weight: bold; background: white;
+        .summary-row {
+            display: flex; justify-content: space-around;
+            margin-top: 10px; padding-top: 10px;
+            border-top: 1px dashed rgba(212, 115, 129, 0.2);
+            font-size: 0.8rem;
         }
+        .summary-item b { display: block; font-size: 1rem; color: var(--deep-rose); }
+
+        .date-container { text-align: center; margin-bottom: 10px; }
+        #mainDate { border: 1.5px solid var(--ribbon-pink); border-radius: 10px; padding: 5px; font-family: inherit; color: var(--deep-rose); background: white; -webkit-appearance: none; }
 
         .entry-row {
-            background: rgba(255, 255, 255, 0.5); padding: 12px;
-            border-radius: 20px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.8);
-            display: flex; flex-direction: column; gap: 8px;
+            background: rgba(255, 255, 255, 0.6); padding: 10px;
+            border-radius: 18px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.9);
+            display: flex; flex-direction: column; gap: 5px;
         }
         .row-main { display: flex; align-items: center; gap: 8px; }
-        .type-select { border: 1.5px solid var(--ribbon-pink); border-radius: 10px; padding: 3px; color: var(--deep-rose); font-weight: bold; }
-        .input-note { flex: 1; background: transparent; border: none; border-bottom: 2px solid var(--ribbon-pink); outline: none; font-size: 1rem; }
+        .type-select { border: 1.5px solid var(--ribbon-pink); border-radius: 10px; padding: 3px; color: var(--deep-rose); font-size: 0.8rem; outline: none; background: #fff; }
+        .input-note { flex: 1; background: transparent; border: none; border-bottom: 1.5px solid var(--ribbon-pink); outline: none; font-size: 1rem; }
+        
         .row-amount { display: flex; justify-content: flex-end; align-items: center; gap: 5px; }
-        .input-amount { width: 90px; background: transparent; border: none; border-bottom: 2px solid var(--ribbon-pink); outline: none; text-align: right; font-weight: bold; color: var(--deep-rose); font-size: 1.2rem; }
-        .btn-remove-row { background: none; border: none; color: #FFB7B7; cursor: pointer; font-size: 1.2rem; }
+        .amount-symbol { color: var(--deep-rose); font-weight: bold; }
+        .input-amount { width: 85px; background: transparent; border: none; border-bottom: 1.5px solid var(--ribbon-pink); outline: none; text-align: right; font-weight: bold; color: var(--deep-rose); font-size: 1.2rem; }
+        
+        button { transition: all 0.2s; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        button:active { transform: scale(0.95); opacity: 0.8; }
 
-        button { transition: all 0.2s; cursor: pointer; font-family: inherit; }
-        .btn-add { background: rgba(255, 255, 255, 0.7); border: 2px dashed var(--deep-rose); color: var(--deep-rose); width: 100%; padding: 8px; border-radius: 20px; margin-bottom: 8px; font-weight: bold; }
-        .btn-save { background: linear-gradient(135deg, #FFB7B7, var(--deep-rose)); color: white; border: none; width: 100%; padding: 12px; border-radius: 50px; font-weight: 800; font-size: 1.1rem; box-shadow: 0 8px 20px rgba(212, 115, 129, 0.2); margin-bottom: 10px; }
+        .btn-add { background: white; border: 1.5px dashed var(--deep-rose); color: var(--deep-rose); width: 100%; padding: 8px; border-radius: 15px; margin-bottom: 10px; font-weight: bold; }
+        .btn-save { background: linear-gradient(135deg, #FFB7B7, var(--deep-rose)); color: white; border: none; width: 100%; padding: 12px; border-radius: 50px; font-weight: 800; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(212, 115, 129, 0.2); }
 
-        .history-section { flex: 1; overflow: hidden; display: flex; flex-direction: column; border-top: 2px solid rgba(212, 115, 129, 0.1); padding-top: 10px; }
-        .history-scroll-area { overflow-y: auto; flex: 1; }
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.4); }
+        .history-section { flex: 1; overflow: hidden; display: flex; flex-direction: column; border-top: 1px solid rgba(212, 115, 129, 0.1); margin-top: 15px; padding-top: 5px; }
+        .history-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.5); }
         .amt-in { color: var(--deep-rose); font-weight: bold; }
         .amt-out { color: #888; font-weight: bold; }
 
-        .settings-panel { display: none; background: white; border-radius: 25px; padding: 20px; position: absolute; z-index: 100; width: 85%; left: 7.5%; top: 60px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 2px solid var(--ribbon-pink); }
+        /* 設定面板針對手機優化 */
+        .settings-panel { 
+            display: none; background: white; border-radius: 25px; padding: 20px; 
+            position: absolute; z-index: 100; width: 92%; left: 4%; top: 45px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--ribbon-pink);
+            max-height: 80vh; overflow-y: auto; box-sizing: border-box;
+        }
+        .recurring-item { background: #fffcfc; border: 1px solid var(--ribbon-pink); border-radius: 12px; padding: 10px; margin-top: 8px; font-size: 0.8rem; position: relative; }
     </style>
 </head>
 <body>
 
     <div class="main-card">
         <div class="fixed-top">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:5px;">
+            <div style="display:flex; justify-content: space-between; align-items: center; padding: 0 5px;">
                 <span style="font-size: 1.5rem;">🎀</span>
-                <button onclick="toggleSettings()" style="background:none; border:none; color:var(--deep-rose); font-size: 1.2rem;">⚙️</button>
+                <button onclick="toggleSettings()" style="background:none; border:none; color:var(--deep-rose); font-size: 1.4rem;">⚙️</button>
             </div>
 
             <div id="settingsPanel" class="settings-panel">
-                <p style="font-weight: bold; color: var(--deep-rose); text-align: center;">✨ 目標設定 ✨</p>
-                <input type="text" id="wishInput" placeholder="願望名稱" style="width:100%; margin: 10px 0; padding:10px; border-radius:12px; border:1.5px solid #eee; box-sizing: border-box;">
-                <input type="number" id="goalInput" placeholder="目標金額" style="width:100%; margin-bottom:10px; padding:10px; border-radius:12px; border:1.5px solid #eee; box-sizing: border-box;">
-                <button onclick="saveSettings()" class="btn-save" style="margin-bottom:0;">儲存變更</button>
+                <p style="font-weight: bold; color: var(--deep-rose); text-align: center; margin:0 0 15px 0;">✨ 皇家參數設定 ✨</p>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                    <input type="text" id="wishInput" placeholder="願望名稱" style="padding:10px; border-radius:10px; border:1px solid #ddd;">
+                    <input type="number" id="goalInput" placeholder="目標金額" style="padding:10px; border-radius:10px; border:1px solid #ddd;">
+                </div>
+                <p style="font-weight: bold; color: var(--deep-rose); font-size: 0.85rem; margin: 10px 0 5px;">🔄 固定循環收支</p>
+                <div id="recurringList"></div>
+                <div style="background: var(--gingham); padding: 10px; border-radius: 15px; margin-top: 10px; display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display:flex; gap:5px;">
+                        <input type="text" id="recNote" placeholder="名稱" style="flex:2; padding:8px; border-radius:8px; border:none;">
+                        <input type="number" id="recDay" placeholder="日期" style="flex:1; padding:8px; border-radius:8px; border:none;">
+                    </div>
+                    <div style="display:flex; gap:5px;">
+                        <select id="recType" style="flex:1; border-radius:8px; border:none; background:white; font-size:0.8rem;"><option value="in">💖 存入</option><option value="out">💸 支出</option></select>
+                        <input type="number" id="recAmt" placeholder="金額" style="flex:1; padding:8px; border-radius:8px; border:none;">
+                        <button onclick="addRecurring()" style="background:var(--deep-rose); color:white; border:none; border-radius:8px; padding:0 15px;">＋</button>
+                    </div>
+                </div>
+                <button onclick="saveSettings()" class="btn-save" style="margin-top:20px;">儲存設定</button>
             </div>
 
             <h1>Royal Diary</h1>
             <div id="dailyQuote" class="quote-box"></div>
 
             <div class="status-box">
-                <p id="wishTitle" style="font-weight: 800; color: var(--deep-rose); margin:0;">我的精緻計畫</p>
+                <p id="wishTitle" style="font-weight: 800; color: var(--deep-rose); margin:0; font-size: 0.95rem;">我的精緻計畫</p>
                 <div class="progress-bar-bg"><div id="progressFill" class="progress-bar-fill"></div></div>
-                <p style="margin:0; font-size:0.9rem; font-weight: 600;">
-                    達成 <span id="percentText" style="color:var(--deep-rose); font-size: 1.1rem;">0</span>% ($<span id="currentText">0</span> / $<span id="goalText">0</span>)
+                <p style="margin:0; font-size:0.85rem; font-weight: 600;">
+                    達成 <span id="percentText" style="color:var(--deep-rose);">0</span>% ($<span id="currentText">0</span> / $<span id="goalText">0</span>)
                 </p>
                 <div class="summary-row">
                     <div class="summary-item">累積存入<b id="totalIn">$0</b></div>
@@ -123,87 +150,130 @@
                 </div>
             </div>
 
-            <div class="date-container">
-                <input type="date" id="mainDate">
-            </div>
+            <div class="date-container"><input type="date" id="mainDate"></div>
 
             <div id="inputArea">
                 <div class="entry-row">
                     <div class="row-main">
                         <select class="type-select"><option value="in">💖 存入</option><option value="out">💸 支出</option></select>
-                        <input type="text" class="input-note" placeholder="妳的精彩點滴...">
-                        <button class="btn-remove-row" onclick="removeRow(this)">×</button>
+                        <input type="text" class="input-note" placeholder="記錄一點小確幸...">
+                        <button style="background:none; border:none; color:#FFB7B7; font-size:1.4rem;" onclick="removeRow(this)">×</button>
                     </div>
-                    <div class="row-amount"><span style="color:var(--deep-rose); font-size:0.8rem;">$</span><input type="number" class="input-amount" placeholder="0"></div>
+                    <div class="row-amount">
+                        <span class="amount-symbol">$</span>
+                        <input type="number" class="input-amount" placeholder="0" inputmode="decimal">
+                    </div>
                 </div>
             </div>
             
             <button class="btn-add" onclick="addNewRow()">＋ 增加明細</button>
-            <button class="btn-save" onclick="saveEntries()">寫入明細紀錄 ✨</button>
+            <button class="btn-save" onclick="saveEntries()">寫入皇家紀錄 ✨</button>
         </div>
 
         <div class="history-section">
             <div id="historyList" class="history-scroll-area"></div>
         </div>
-        <button onclick="resetData()" style="color:#eee; border:none; background:none; font-size:10px; margin-top:5px; cursor:pointer;">RESET ALL</button>
+        <button onclick="resetData()" style="color:#eee; border:none; background:none; font-size:9px; margin:5px 0; opacity: 0.5;">RESET DATA</button>
     </div>
 
     <script>
-        const quotes = ["每一筆小小的累積，都是妳未來的底氣。", "優雅的生活，從學會理財開始。", "願望之所以能實現，是因為妳從未停止努力。", "每一份儲蓄，都是對夢想的灌溉。", "存下的不只是錢，更是妳對未來的承諾。"];
-        let goal = parseFloat(localStorage.getItem('final_goal')) || 5000;
-        let wish = localStorage.getItem('final_wish') || "我的精緻計畫";
-        let history = JSON.parse(localStorage.getItem('final_history')) || [];
+        const quotes = ["每一筆小小的累積，都是妳未來的底氣。", "優雅的生活，從學會理財開始。", "願望之所以能實現，是因為妳從未停止努力。", "每一份儲蓄，都是對夢想的灌溉。"];
+        let goal = parseFloat(localStorage.getItem('royal_goal')) || 5000;
+        let wish = localStorage.getItem('royal_wish') || "我的精緻計畫";
+        let history = JSON.parse(localStorage.getItem('royal_history')) || [];
+        let recurring = JSON.parse(localStorage.getItem('royal_recurring')) || [];
+        let lastCheck = localStorage.getItem('royal_last_check') || "";
 
         window.onload = function() {
             document.getElementById('mainDate').value = new Date().toISOString().split('T')[0];
+            checkRecurring();
             updateQuote();
             updateUI();
+            renderRecurringList();
         };
 
-        function updateQuote() {
-            document.getElementById('dailyQuote').innerText = `✨ ${quotes[Math.floor(Math.random() * quotes.length)]}`;
+        function checkRecurring() {
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+            if (lastCheck === todayStr) return;
+            let autoAdded = false;
+            recurring.forEach(item => {
+                if (today.getDate() == item.day) {
+                    const id = `auto-${todayStr}-${item.note}`;
+                    if (!history.find(h => h.id === id)) {
+                        history.unshift({ id: id, date: todayStr.replace(/-/g, '.'), note: `🔄 ${item.note}`, amount: item.type === 'in' ? item.amount : -item.amount, type: item.type, ts: today.getTime() });
+                        autoAdded = true;
+                    }
+                }
+            });
+            if (autoAdded) {
+                localStorage.setItem('royal_history', JSON.stringify(history));
+                alert("✨ 皇家管家：已自動補上今日固定收支！");
+            }
+            localStorage.setItem('royal_last_check', todayStr);
         }
 
         function toggleSettings() {
             const p = document.getElementById('settingsPanel');
             p.style.display = (p.style.display === 'block') ? 'none' : 'block';
+            if(p.style.display === 'block') {
+                document.getElementById('wishInput').value = wish;
+                document.getElementById('goalInput').value = goal;
+            }
         }
 
         function saveSettings() {
-            const g = document.getElementById('goalInput').value;
-            const w = document.getElementById('wishInput').value;
-            if(g) goal = parseFloat(g);
-            if(w) wish = w;
-            localStorage.setItem('final_goal', goal);
-            localStorage.setItem('final_wish', wish);
+            goal = parseFloat(document.getElementById('goalInput').value) || goal;
+            wish = document.getElementById('wishInput').value || wish;
+            localStorage.setItem('royal_goal', goal);
+            localStorage.setItem('royal_wish', wish);
+            localStorage.setItem('royal_recurring', JSON.stringify(recurring));
             updateUI();
             toggleSettings();
         }
 
+        function addRecurring() {
+            const note = document.getElementById('recNote').value;
+            const day = parseInt(document.getElementById('recDay').value);
+            const amt = parseFloat(document.getElementById('recAmt').value);
+            const type = document.getElementById('recType').value;
+            if (note && day >= 1 && day <= 31 && amt > 0) {
+                recurring.push({ note, day, amount: amt, type });
+                document.getElementById('recNote').value = '';
+                document.getElementById('recDay').value = '';
+                document.getElementById('recAmt').value = '';
+                renderRecurringList();
+            }
+        }
+
+        function renderRecurringList() {
+            const list = document.getElementById('recurringList');
+            list.innerHTML = recurring.map((item, index) => `
+                <div class="recurring-item">
+                    <b>每月 ${item.day} 號</b> - ${item.note} 
+                    <span style="color:${item.type==='in'?'#D47381':'#888'}">($${item.amount.toLocaleString()})</span>
+                    <button onclick="removeRecurring(${index})" style="position:absolute; right:10px; top:8px; border:none; background:none; color:#ffb7b7; font-size:1.2rem;">×</button>
+                </div>
+            `).join('');
+        }
+
+        function removeRecurring(index) { recurring.splice(index, 1); renderRecurringList(); }
+        function updateQuote() { document.getElementById('dailyQuote').innerText = `✨ ${quotes[Math.floor(Math.random() * quotes.length)]}`; }
+
         function addNewRow() {
             const div = document.createElement('div');
             div.className = 'entry-row';
-            div.innerHTML = `
-                <div class="row-main">
-                    <select class="type-select"><option value="in">💖 存入</option><option value="out">💸 支出</option></select>
-                    <input type="text" class="input-note" placeholder="妳的精彩點滴...">
-                    <button class="btn-remove-row" onclick="removeRow(this)">×</button>
-                </div>
-                <div class="row-amount"><span style="color:var(--deep-rose); font-size:0.8rem;">$</span><input type="number" class="input-amount" placeholder="0"></div>
-            `;
+            div.innerHTML = `<div class="row-main"><select class="type-select"><option value="in">💖 存入</option><option value="out">💸 支出</option></select><input type="text" class="input-note" placeholder="記錄一點小確幸..."><button style="background:none; border:none; color:#FFB7B7; font-size:1.4rem;" onclick="removeRow(this)">×</button></div><div class="row-amount"><span class="amount-symbol">$</span><input type="number" class="input-amount" placeholder="0" inputmode="decimal"></div>`;
             document.getElementById('inputArea').appendChild(div);
         }
 
-        function removeRow(btn) {
-            if (document.querySelectorAll('.entry-row').length > 1) btn.closest('.entry-row').remove();
-        }
+        function removeRow(btn) { if (document.querySelectorAll('.entry-row').length > 1) btn.closest('.entry-row').remove(); }
 
         function saveEntries() {
             const rows = document.querySelectorAll('.entry-row');
             const d = new Date(document.getElementById('mainDate').value);
             const dateStr = `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
             let hasData = false;
-
             rows.forEach(row => {
                 const type = row.querySelector('.type-select').value;
                 const note = row.querySelector('.input-note').value || (type === 'in' ? "存入" : "支出");
@@ -213,52 +283,47 @@
                     hasData = true;
                 }
             });
-
             if(hasData) {
                 history.sort((a, b) => b.ts - a.ts);
-                localStorage.setItem('final_history', JSON.stringify(history));
-                document.getElementById('inputArea').innerHTML = `<div class="entry-row"><div class="row-main"><select class="type-select"><option value="in">💖 存入</option><option value="out">💸 支出</option></select><input type="text" class="input-note" placeholder="妳的精彩點滴..."><button class="btn-remove-row" onclick="removeRow(this)">×</button></div><div class="row-amount"><span style="color:var(--deep-rose); font-size:0.8rem;">$</span><input type="number" class="input-amount" placeholder="0"></div></div>`;
-                updateQuote();
+                localStorage.setItem('royal_history', JSON.stringify(history));
+                document.getElementById('inputArea').innerHTML = `<div class="entry-row"><div class="row-main"><select class="type-select"><option value="in">💖 存入</option><option value="out">💸 支出</option></select><input type="text" class="input-note" placeholder="記錄一點小確幸..."><button style="background:none; border:none; color:#FFB7B7; font-size:1.4rem;" onclick="removeRow(this)">×</button></div><div class="row-amount"><span class="amount-symbol">$</span><input type="number" class="input-amount" placeholder="0" inputmode="decimal"></div></div>`;
                 updateUI();
             }
         }
 
         function updateUI() {
-            const totalIn = history.filter(h => h.type === 'in').reduce((s, i) => s + i.amount, 0);
-            const totalOut = Math.abs(history.filter(h => h.type === 'out').reduce((s, i) => s + i.amount, 0));
+            const totalIn = history.filter(h => h.type === 'in').reduce((s, i) => s + Math.abs(i.amount), 0);
+            const totalOut = history.filter(h => h.type === 'out').reduce((s, i) => s + Math.abs(i.amount), 0);
             const balance = Math.max(0, totalIn - totalOut);
-
             document.getElementById('totalIn').innerText = `$${totalIn.toLocaleString()}`;
             document.getElementById('totalOut').innerText = `$${totalOut.toLocaleString()}`;
             document.getElementById('wishTitle').innerText = `✨ ${wish} ✨`;
             document.getElementById('currentText').innerText = Math.floor(balance).toLocaleString();
             document.getElementById('goalText').innerText = goal.toLocaleString();
-
             let percent = Math.min((balance / goal) * 100, 100);
             document.getElementById('percentText').innerText = Math.floor(percent);
             document.getElementById('progressFill').style.width = percent + "%";
-
             const list = document.getElementById('historyList');
             list.innerHTML = history.map(h => `
                 <div class="history-item">
                     <div><span style="font-size:0.75rem; color:#999;">${h.date}</span><br><b>${h.note}</b></div>
                     <div style="display:flex; align-items:center;">
                         <span class="${h.type === 'in' ? 'amt-in' : 'amt-out'}">${h.type === 'in' ? '+' : ''}${h.amount.toLocaleString()}</span>
-                        <button onclick="deleteItem(${h.id})" style="background:none; border:none; color:#ddd; font-size:1.2rem; margin-left:8px;">×</button>
+                        <button onclick="deleteItem('${h.id}')" style="background:none; border:none; color:#ddd; font-size:1.5rem; margin-left:10px; padding: 5px;">×</button>
                     </div>
                 </div>
-            `).join('') || '<p style="text-align:center; color:#ccc; margin-top:20px;">開始妳的圓夢之旅...</p>';
+            `).join('') || '<p style="text-align:center; color:#ccc; margin-top:20px; font-size:0.9rem;">開始妳的圓夢之旅...</p>';
         }
 
         function deleteItem(id) {
-            if(confirm("確定刪除嗎？")) {
-                history = history.filter(h => h.id !== id);
-                localStorage.setItem('final_history', JSON.stringify(history));
+            if(confirm("確定刪除這筆紀錄嗎？")) {
+                history = history.filter(h => h.id != id);
+                localStorage.setItem('royal_history', JSON.stringify(history));
                 updateUI();
             }
         }
 
-        function resetData() { if(confirm("確定重置嗎？")) { localStorage.clear(); location.reload(); } }
+        function resetData() { if(confirm("重置所有資料嗎？")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>
